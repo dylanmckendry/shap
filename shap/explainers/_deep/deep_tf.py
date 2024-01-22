@@ -122,7 +122,7 @@ class TFDeep(Explainer):
             self.multi_input = False
             if not isinstance(self.model_inputs, list):
                 self.model_inputs = [self.model_inputs]
-        if not isinstance(data, list) and (hasattr(data, "__call__") is False):
+        if not isinstance(data, (list, tuple)) and (hasattr(data, "__call__") is False):
             data = [data]
         self.data = data
 
@@ -265,7 +265,7 @@ class TFDeep(Explainer):
             elif not isinstance(X, list):
                 X = [X]
         else:
-            assert isinstance(X, list), "Expected a list of model inputs!"
+            assert isinstance(X, (list, tuple)), "Expected a list or tuple of model inputs!"
         assert len(self.model_inputs) == len(X), "Number of model inputs (%d) does not match the number given (%d)!" % (len(self.model_inputs), len(X))
 
         # rank and determine the model outputs that we will explain
@@ -314,7 +314,7 @@ class TFDeep(Explainer):
 
                 # assign the attributions to the right part of the output arrays
                 for t in range(len(X)):
-                    phis[t][j] = (sample_phis[t][bg_data[t].shape[0]:] * (X[t][j] - bg_data[t])).mean(0)
+                    phis[t][j] = np.mean(sample_phis[t][bg_data[t].shape[0]:] * (X[t][j] - bg_data[t]), axis=0)
 
             output_phis.append(phis[0] if not self.multi_input else phis)
 
