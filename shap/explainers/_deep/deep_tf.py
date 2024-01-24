@@ -260,9 +260,9 @@ class TFDeep(Explainer):
     def shap_values(self, X, ranked_outputs=None, output_rank_order="max", check_additivity=True):
         # check if we have multiple inputs
         if not self.multi_input:
-            if isinstance(X, list) and len(X) != 1:
+            if isinstance(X, (list, tuple)) and len(X) != 1:
                 raise ValueError("Expected a single tensor as model input!")
-            elif not isinstance(X, list):
+            elif not isinstance(X, (list, tuple)):
                 X = [X]
         else:
             assert isinstance(X, (list, tuple)), "Expected a list or tuple of model inputs!"
